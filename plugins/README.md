@@ -3,8 +3,8 @@
 These packages are **not** enabled by default and are not built-in YAQMC features.
 
 `starter/` is a standalone JavaScript plugin with lyrics window buttons, a dependency-free packer, SDK types,
-and offline API docs. Run `npm run api:sync` to export it beside the repository as
-`plugins/starter`. API changes must refresh the generated docs; `npm run docs:check` verifies synchronization.
+and offline API docs. Copy `plugins/starter` to start a plugin. Run `npm run api:sync` at the repository root
+to refresh its SDK/documentation mirror, or `npm run api:check` to verify synchronization.
 
 Packed downloads: [`packages/`](packages/) · docs: [English](starter/api/docs/plugin-examples.md) /
 [简体中文](starter/api/docs/zh-CN/plugin-examples.md)

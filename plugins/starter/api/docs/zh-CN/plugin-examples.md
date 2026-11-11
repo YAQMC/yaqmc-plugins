@@ -2,7 +2,7 @@
 
 插件源码、打包命令和可复制模板均位于独立的 [YAQMC/yaqmc-plugins](https://github.com/YAQMC/yaqmc-plugins) 仓库；下述插件构建命令在该仓库中执行。
 
-运行 `npm run plugin:example:sync` 可在仓库旁创建可直接复制的 `yaqmc-plugins/plugins/starter`，包含离线 API 文档、
+复制插件仓库中的 `plugins/starter` 即可开始开发，包含离线 API 文档、
 SDK 类型和无第三方依赖的打包器。示例通过[歌词工具栏 API](plugin-lyrics-api.md)添加可选的歌词页窗口按钮。
 
 > **简体中文** | [English](../plugin-examples.md)
@@ -12,7 +12,7 @@ SDK 类型和无第三方依赖的打包器。示例通过[歌词工具栏 API](
 源码在 `yaqmc-plugins/plugins/`。已打包的 `*.yaqmc-plugin` 在
 [`yaqmc-plugins/plugins/packages/`](https://github.com/YAQMC/yaqmc-plugins/tree/main/plugins/packages/)。可用 `npm run pack` 重新打包。
 Rust Provider Component 使用独立的可复现 target。只读目录用 `npm run provider:catalog`；完整能力夹具用
-`npm run provider:platform` 构建、打包并运行集成验证。
+`npm run provider:platform` 构建并打包；客户端仍保留相应的宿主集成回归测试。
 
 ## 下载
 

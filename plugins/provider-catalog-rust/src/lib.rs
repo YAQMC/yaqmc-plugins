@@ -2,6 +2,8 @@
 
 extern crate alloc;
 
+include!("../../provider-support/memory.rs");
+
 use alloc::{
     alloc::{alloc, dealloc, realloc, Layout},
     format,

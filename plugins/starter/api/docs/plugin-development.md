@@ -53,7 +53,7 @@ Read events: `track.changed`, `playback.stateChanged`, `playback.position`, `pla
 through `PlayerService` and inherit the session-safe seek mailbox. Plugin seeks are rate-limited (4/s).
 
 Build legacy examples with `npm run build`, validate with `npm run validate`, and pack with
-`npm run pack` (or `npm run pack` after a build).
+`npm run pack`.
 
 ## Provider Components
 

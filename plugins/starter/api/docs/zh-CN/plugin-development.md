@@ -4,8 +4,7 @@
 
 克隆插件仓库后复制 `plugins/starter` 即可使用独立模板，内置离线 API 文档。
 复制该目录后编辑 `main.js`，在示例目录执行 `npm run pack` 即可打包。
-[歌词工具栏 API](plugin-lyrics-api.md) 展示可选窗口按钮。每次修改插件 API 后，运行同步命令并提交生成的
-SDK 与文档；`docs:check` 会阻止未同步的 API 变更进入 CI。
+[歌词工具栏 API](plugin-lyrics-api.md) 展示可选窗口按钮。API 更新后，独立仓库定期拉取并验证 SDK 与离线文档；需要立即同步时可手动运行工作流。
 
 > **简体中文** | [English](../plugin-development.md)
 

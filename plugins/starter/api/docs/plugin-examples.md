@@ -7,8 +7,8 @@ Plugin sources, build commands and the copyable starter live in [YAQMC/yaqmc-plu
 These are **unsigned local examples**. They are not built-in YAQMC features and are not enabled by default.
 Install from Settings → Plugins → Choose file. There is no marketplace.
 
-For a copyable standalone starting point, run `npm run plugin:example:sync`. It exports
-`yaqmc-plugins/plugins/starter` beside the repository, including offline API docs, SDK types and a zero-dependency packer.
+For a copyable standalone starting point, copy `plugins/starter` from the plugin repository. It includes
+offline API docs, SDK types and a zero-dependency packer.
 The starter adds optional lyrics window buttons via the [lyrics toolbar API](plugin-lyrics-api.md).
 
 Source lives in `yaqmc-plugins/plugins/`. Packed `*.yaqmc-plugin` files are in

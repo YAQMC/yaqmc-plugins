@@ -2,6 +2,8 @@
 
 extern crate alloc;
 
+include!("../../provider-support/memory.rs");
+
 use alloc::{
     alloc::{alloc, dealloc, realloc, Layout},
     format,
@@ -12,18 +14,6 @@ use serde_json::{json, Value};
 
 #[global_allocator]
 static ALLOCATOR: dlmalloc::GlobalDlmalloc = dlmalloc::GlobalDlmalloc;
-
-#[unsafe(no_mangle)]
-unsafe extern "C" fn memcmp(left: *const u8, right: *const u8, length: usize) -> i32 {
-    for index in 0..length {
-        let left = left.add(index).read();
-        let right = right.add(index).read();
-        if left != right {
-            return i32::from(left) - i32::from(right);
-        }
-    }
-    0
-}
 
 #[unsafe(export_name = "cabi_realloc")]
 unsafe extern "C" fn canonical_realloc(
