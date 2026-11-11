@@ -20,6 +20,8 @@ npm run provider:catalog
 npm run provider:platform
 ```
 
-客户端的 SDK、WIT 和 API 文档是接口定义来源。本仓库每 15 分钟检查客户端 `main`，验证后同步生成文件；GitHub 定时任务可能延迟，也可手动触发。工作流仅使用本仓库的 `GITHUB_TOKEN`。`UPSTREAM.json` 记录对应客户端提交，`plugins/starter/api/contract.json` 记录接口与文档哈希；模板业务代码不会被同步覆盖。手动重建镜像可运行 `npm run api:sync`，校验可运行 `npm run api:check`，拉取最新接口可运行 `npm run api:sync -- --latest`。
+本仓库维护 [SDK 类型](sdk/plugin/src/index.ts)、[开发文档](docs/plugin-development.md)与[中文文档](docs/zh-CN/plugin-development.md)。客户端仅保留插件宿主实现和运行时 WIT 协议。本仓库每 15 分钟检查客户端 `main`，更新 WIT 副本、接口哈希和模板离线文档；GitHub 定时任务可能延迟，也可手动触发。工作流仅使用本仓库的 `GITHUB_TOKEN`。`UPSTREAM.json` 记录对应客户端提交，`plugins/starter/api/contract.json` 分别记录客户端实现和本仓库 SDK/文档的哈希。修改 API 时，应同时维护本仓库的 SDK 与开发文档；离线副本由工具生成，不手工修改。
+
+在本仓库运行 `npm run api:sync` 重建离线副本，`npm run api:check` 校验同步状态，`npm run api:sync -- --latest` 拉取最新客户端协议。同步工具本身也由本仓库维护，客户端不再承担插件示例或网站维护任务。
 
 仓库及 SDK 默认遵循 GPL-3.0-or-later；可复制模板自身使用其目录中的 MIT 许可。原始来源和许可见 [NOTICE.md](NOTICE.md)、[LICENSE](LICENSE) 与模板中的许可文件。

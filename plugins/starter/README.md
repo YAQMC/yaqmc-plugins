@@ -17,7 +17,7 @@
 中文入口为 [插件开发](api/docs/zh-CN/plugin-development.md)和
 [歌词工具栏 API](api/docs/zh-CN/plugin-lyrics-api.md)。`api/sdk.ts` 可提供编辑器类型提示。
 
-本模板位于独立的 [YAQMC/yaqmc-plugins](https://github.com/YAQMC/yaqmc-plugins) 仓库。SDK、WIT 与离线文档由客户端工作流自动同步，模板业务代码由本仓库维护。`UPSTREAM.json` 与 API 契约记录来源；在插件仓库运行 `npm run api:check` 可核验镜像。
+本模板位于独立的 [YAQMC/yaqmc-plugins](https://github.com/YAQMC/yaqmc-plugins) 仓库。SDK、开发文档和同步工具均由插件仓库维护；WIT 副本和接口哈希从客户端同步。`UPSTREAM.json` 与 API 契约记录来源；在插件仓库运行 `npm run api:check` 可核验离线副本。
 
 示例插件代码采用本目录的 MIT 许可。`api/` 中复制的 YAQMC SDK、WIT 与文档遵循 YAQMC 原许可，
 见 `api/YAQMC-LICENSE`（GPL-3.0-or-later）。

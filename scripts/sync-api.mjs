@@ -29,17 +29,12 @@ execFileSync('git', ['-C', source, 'fetch', '--depth=1', 'origin', upstream.revi
 execFileSync('git', ['-C', source, 'checkout', '--detach', upstream.revision], {
   stdio: 'inherit',
 });
-execFileSync('npm', ['ci', '--ignore-scripts'], {
-  cwd: source,
-  stdio: 'inherit',
-  shell: process.platform === 'win32',
-});
 execFileSync(
   process.execPath,
   [
-    path.join(source, 'scripts/sync-plugin-example.mjs'),
-    '--out',
-    root,
+    path.join(root, 'scripts/export-api.mjs'),
+    '--client',
+    source,
     ...process.argv.slice(2).filter((value) => value !== '--latest'),
   ],
   { cwd: source, stdio: 'inherit' },

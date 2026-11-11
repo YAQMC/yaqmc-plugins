@@ -56,5 +56,5 @@ test('standalone and workspace SDK mirrors match and offline API pages are prese
     assert.match(readFileSync(path.join(starter, file), 'utf8'), /ui\.lyrics/);
   }
   const sources = JSON.parse(readFileSync(path.join(starter, 'api/contract.json'), 'utf8')).sources;
-  assert.ok(sources['sdk/plugin/src/index.ts']);
+  assert.ok(sources['plugins:sdk/plugin/src/index.ts']);
 });

@@ -5,7 +5,7 @@ Plugin sources, build commands and the copyable starter live in [YAQMC/yaqmc-plu
 Clone the plugin repository and copy `plugins/starter` for a standalone template with offline API documentation.
 Edit its `main.js`, then run `npm run pack` inside
 the exported folder. The [lyrics toolbar API](plugin-lyrics-api.md) demonstrates optional window controls.
-Client API updates automatically refresh the companion SDK/docs mirror through the synchronization workflow.
+This repository owns the SDK and developer documentation. The synchronization workflow refreshes runtime WIT and host contract hashes from the client, then regenerates the starter's offline reference. Maintain SDK types and documentation here when changing APIs.
 
 > [简体中文](zh-CN/plugin-development.md) | **English**
 
