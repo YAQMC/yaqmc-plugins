@@ -1,0 +1,24 @@
+{
+  "name": "@yaqmc/plugin-examples",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "license": "GPL-3.0-or-later",
+  "engines": {
+    "node": ">=26.7.0"
+  },
+  "scripts": {
+    "api:sync": "node scripts/sync-api.mjs",
+    "api:check": "node scripts/sync-api.mjs --check",
+    "build": "node scripts/build-plugin-examples.mjs",
+    "validate": "node scripts/validate-example-plugins.mjs",
+    "pack": "npm run build && npm run validate && node scripts/pack-example-plugins.mjs && node scripts/pack-starter.mjs",
+    "provider:catalog": "node scripts/build-provider-component-example.mjs example && node scripts/pack-example-plugins.mjs --provider-example",
+    "provider:platform": "node scripts/build-provider-component-example.mjs platform-example && node scripts/pack-example-plugins.mjs --provider-platform-example",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "typescript": "6.0.3",
+    "prettier": "3.9.6"
+  }
+}

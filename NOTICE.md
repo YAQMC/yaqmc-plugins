@@ -1,0 +1,1 @@
+Extracted from [YAQMC/YAQMC at 5d5f86fb93ecd7398789d1db5d8bc8349de0e751](https://github.com/YAQMC/YAQMC/tree/5d5f86fb93ecd7398789d1db5d8bc8349de0e751). Original authorship and GPL-3.0-or-later notices remain applicable. The starter template retains its own MIT license. The app SDK and copied API documentation remain GPL-3.0-or-later.

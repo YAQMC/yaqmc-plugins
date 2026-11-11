@@ -1,0 +1,122 @@
+# Third-party notices
+
+YAQMC's production QMC/mflac decryptor delegates to the pinned `qm-api-rs`
+revision `bab630d44901f80cae47dd0f09314950d0028e23`, which independently
+adapts cipher behavior from the MIT-licensed project below. Upstream files were
+not vendored. Protocol-only research references, including GPL/LGPL and
+unlicensed repositories, are recorded in
+[docs/qqmusic-provider.md](docs/qqmusic-provider.md) and are not reproduced
+here.
+
+## Apple Music-like Lyrics
+
+Source: <https://github.com/amll-dev/applemusic-like-lyrics>
+
+Packages: `@applemusic-like-lyrics/core` `0.5.2` and `@applemusic-like-lyrics/react` `0.5.2`
+
+License: GNU Affero General Public License version 3 only (`AGPL-3.0-only`). These official packages are used by
+the desktop lyric renderer without vendoring. Installation applies the local modification in
+[`scripts/patch-dependencies.mjs`](https://github.com/YAQMC/YAQMC/blob/main/scripts/patch-dependencies.mjs): never-active lyric lines use opacity
+until their first activation creates the word masks. The script is the source of this modification.
+The package license text and corresponding
+source are available from the upstream project; distributors of YAQMC must satisfy the GPLv3/AGPLv3 obligations
+described in [docs/lyrics.md](docs/lyrics.md#amll-decision).
+
+`mzj3920/qqmusic-decrypt`, AynaLivePlayer/miaosic, and official QQ Music Electron ASAR contents are **not**
+in-tree YAQMC sources. The `mzj3920` and ASAR claims were removed from the current pinned `qm-api-rs` revision;
+miaosic was protocol corroboration only.
+
+## OpenCC JavaScript
+
+Source: <https://github.com/nk2028/opencc-js>
+
+Package: `opencc-js` `1.4.2`
+
+The JavaScript conversion engine is MIT-licensed (Copyright (c) 2020-2021 The nk2028 Project).
+Its generated dictionaries derive from `opencc-data` and use Apache License 2.0. YAQMC loads the
+unmodified Simplified-to-Traditional Chinese converter locally when Traditional Chinese lyrics are selected.
+Distributions must retain the package's `LICENSE`, `LICENSES/Apache-2.0.txt`, and
+`THIRD_PARTY_LICENSES.md`, including the corresponding upstream notices.
+
+## Rust Provider Component examples
+
+The optional, unsigned API v3 example packages in [YAQMC/yaqmc-plugins](https://github.com/YAQMC/yaqmc-plugins/tree/main/plugins/packages) contain WebAssembly Components
+built from the checked-in Rust sources and lockfiles. They are not built into the YAQMC desktop executable. The
+complete platform example directly uses:
+
+| Package       | Version   | Upstream                                          | License declared by the crate                      |
+| ------------- | --------- | ------------------------------------------------- | -------------------------------------------------- |
+| `dlmalloc`    | `0.2.11`  | <https://github.com/alexcrichton/dlmalloc-rs>     | MIT or Apache-2.0                                  |
+| `serde_json`  | `1.0.145` | <https://github.com/serde-rs/json>                | MIT or Apache-2.0                                  |
+| `wit-bindgen` | `0.46.0`  | <https://github.com/bytecodealliance/wit-bindgen> | Apache-2.0 with LLVM exception, Apache-2.0, or MIT |
+
+The example `Cargo.lock` files are the authoritative transitive resolutions. Source distributions retain those
+lockfiles and the project GPL notice; distributors should preserve the upstream license choices applicable to the
+exact resolved crates.
+
+## QMCDecode
+
+Source: <https://github.com/gongjiehong/QMCDecode>
+Revision: `aea76301a08678100ec677cb61a8458bc75662ec`
+
+| Upstream file / range                                           | Pinned `qm-api-rs` target                                           | Transformation                                                                                                                              |
+| --------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `QMCDecode/QMCipher.swift` `QMMapCipher.getMask` / `rotate`     | `src/qmc.rs` `Qmc2Map::decrypt_in_place`                            | Independent Rust rewrite of the non-circular `(key << rot) \| (key >> rot)` mask. The key is indexed with `key.len()` rather than `& 0xFF`. |
+| `QMCDecode/QMCipher.swift` `QMRC4Cipher`                        | `src/qmc.rs` `Qmc2Rc4` / `decrypt_in_place`                         | Independent Rust rewrite of the 128-byte first segment and 5,120-byte segmented RC4 stream.                                                 |
+| `QMCDecode/QMCKeyDecoder.swift` and `QMCDecode/TeaCipher.swift` | `src/qmc.rs` `derive_key`, `simple_make_key`, `decrypt_tencent_tea` | Independent Rust rewrite of ekey TEA unwrapping after any EncV2 outer wrapper is removed.                                                   |
+
+The YAQMC file `crates/yaqmc-provider-qqmusic/src/qmc.rs` now only validates
+and redacts the media key before selecting
+`crates/yaqmc-provider-qqmusic/src/qmapi/qmc.rs`'s `QmapiQmcDecryptor`. That
+adapter delegates Map, segmented-RC4, and ekey processing to the pinned symbols
+above; the former duplicate in-tree cipher and TEA implementation was retired
+when the production provider cut over to the pinned dependency.
+
+MIT License
+
+Copyright (c) 2019 程序猿老龚 gjh.me
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+## quick-xml
+
+Source: <https://github.com/tafia/quick-xml>
+Version: `0.41.0`, MIT. Used by the pinned QQ protocol library and host XML utilities.
+
+The MIT License (MIT)
+
+Copyright (c) 2016 Johann Tuffe
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
