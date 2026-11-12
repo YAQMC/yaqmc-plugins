@@ -95,9 +95,12 @@ export type PluginPermission =
   | 'ui.navigation'
   | 'ui.layout'
   | 'ui.lyrics'
+  /** API v5: limited to native user-selected handles. */
+  | 'files.read'
+  | 'files.write'
   | `network:https://${string}`;
 
-/** Reserved capabilities. Raw fetch, filesystem, and account credentials stay denied. */
+/** Reserved capabilities. Raw fetch, unrestricted filesystem, and account credentials stay denied. */
 export type FuturePluginPermission =
   'network' | 'filesystem' | 'provider' | 'account' | 'native' | 'shell';
 
@@ -300,7 +303,64 @@ export interface PluginPageActionEvent {
   pageId: string;
 }
 
+export interface PluginFileSelection {
+  /** Opaque and bound to this plugin runtime. Never persist in storage or settings. */
+  handle: string;
+  name: string;
+  type: 'file' | 'directory';
+  writable: boolean;
+}
+
+export interface PluginFileEntry {
+  name: string;
+  type: 'file' | 'directory';
+  size: number | null;
+  modifiedMs: number | null;
+  writable: boolean;
+}
+
+/** API v5, manifest v1. Read/write limits apply to decoded bytes, not string characters. */
+export interface PluginFiles {
+  capabilities(): Promise<
+    | { available: false }
+    | {
+        available: true;
+        maxBytes: number;
+        maxEntries: number;
+        persistentHandles: false;
+        recursiveDelete: false;
+        directoryDelete: boolean;
+      }
+  >;
+  /** files.read; writable: true also requires files.write. Cancellation returns null. */
+  pickFile(options?: { writable?: boolean }): Promise<PluginFileSelection | null>;
+  pickDirectory(options?: { writable?: boolean }): Promise<PluginFileSelection | null>;
+  stat(handle: string, path?: string): Promise<PluginFileEntry>;
+  list(
+    handle: string,
+    options?: { path?: string; cursor?: number; limit?: number },
+  ): Promise<{ entries: PluginFileEntry[]; nextCursor: number | null }>;
+  /** Up to 512 KiB per call. Prefer base64 when reading binary data or multibyte text in chunks. */
+  readFile(
+    handle: string,
+    options?: { path?: string; encoding?: 'utf8' | 'base64'; offset?: number; length?: number },
+  ): Promise<{ data: string; bytesRead: number; eof: boolean }>;
+  /** Create by default. Existing files require explicit overwrite: true. Writes are at most 512 KiB. */
+  writeFile(
+    handle: string,
+    options: { path?: string; data: string; encoding?: 'utf8' | 'base64'; overwrite?: boolean },
+  ): Promise<{ ok: true; bytesWritten: number }>;
+  mkdir(handle: string, path: string): Promise<{ ok: true }>;
+  /** Rename within the same parent; name must be one portable filename, not a path. */
+  rename(handle: string, path: string, name: string): Promise<{ ok: true; name?: string }>;
+  /** Never recursive. Android supports file deletion only; check directoryDelete before deleting folders. */
+  remove(handle: string, path?: string): Promise<{ ok: true }>;
+  close(handle: string): Promise<{ ok: true }>;
+}
+
 export interface PluginContext {
+  /** API v5. Session-scoped native file handles; no absolute paths or content URIs. */
+  files: PluginFiles;
   plugin: { id: string };
   events: PluginEvents;
   track: { get(): Promise<PluginTrack>; read(): Promise<PluginTrack> };

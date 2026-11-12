@@ -2,6 +2,28 @@ import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 const root = path.resolve(import.meta.dirname, '..');
+const localIndex = process.argv.indexOf('--client');
+if (localIndex >= 0) {
+  const local = process.argv[localIndex + 1];
+  if (!local || local.startsWith('--'))
+    throw new Error('--client requires a local client checkout');
+  execFileSync(
+    process.execPath,
+    [
+      path.join(root, 'scripts/export-api.mjs'),
+      '--client',
+      path.resolve(local),
+      ...process.argv
+        .slice(2)
+        .filter(
+          (value, index) =>
+            index + 2 !== localIndex && index + 2 !== localIndex + 1 && value !== '--latest',
+        ),
+    ],
+    { cwd: root, stdio: 'inherit' },
+  );
+  process.exit(0);
+}
 const upstream = JSON.parse(readFileSync(path.join(root, 'UPSTREAM.json'), 'utf8'));
 if (process.argv.includes('--latest')) {
   upstream.revision = execFileSync(

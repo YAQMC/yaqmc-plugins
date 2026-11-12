@@ -36,6 +36,10 @@ PlayerService. The examples do **not** fire them automatically; that would steal
 
 ## Install
 
+The API v5 [`Local files` example](https://github.com/YAQMC/YAQMC/blob/main/plugins/script-files/) supports native desktop and Android.
+It exposes system pickers, directory pagination, file previews and explicit create/rename/delete actions.
+See [Local files API](plugin-files-api.md) for permissions, handle lifetime and platform limits.
+
 1. Download a `*.yaqmc-plugin` file.
 2. Open YAQMC → Settings → Plugins → Choose file.
 3. Review SHA-256, permissions, and scan findings. Accept `player.control` only if you want bookmark restore.

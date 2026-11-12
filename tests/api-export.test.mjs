@@ -37,7 +37,7 @@ test('independent API export reads client contracts without client SDK, docs or 
   const run = (...args) =>
     execFileSync(
       process.execPath,
-      ['scripts/export-api.mjs', '--client', client, '--out', output, ...args],
+      ['scripts/sync-api.mjs', '--client', client, '--out', output, ...args],
       { cwd: root, stdio: 'pipe' },
     );
   try {

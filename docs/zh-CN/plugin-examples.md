@@ -32,6 +32,9 @@ Rust Provider Component 使用独立的可复现 target。只读目录用 `npm r
 
 ## 安装
 
+API v5 的[本地文件示例](../../plugins/script-files/)支持桌面端和 Android，提供系统选择器、目录分页、文件预览，
+以及通过按钮触发的新建、重命名与删除操作。权限、句柄生命周期与平台限制见[本地文件管理 API](plugin-files-api.md)。
+
 1. 下载 `*.yaqmc-plugin`。
 2. 打开 YAQMC → 设置 → 插件 → 选择文件。
 3. 核对 SHA-256、权限和扫描结果。只有需要恢复进度时才批准 `player.control`。

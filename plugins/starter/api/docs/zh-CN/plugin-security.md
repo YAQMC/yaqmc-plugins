@@ -21,7 +21,11 @@ Cookie 或任意渲染器 IPC。
 `network:https://host`，以及 v4 的 `ui.pages`、`ui.navigation`、`ui.layout`。API v4 页面是由 YAQMC 组件渲染的区块文档，
 插件不能向这些界面注入标记、样式、图片或 URL（见[插件页面 API](plugin-pages-api.md)）。
 
-API v2/v3/v4 另支持 `ui.songBadges`，仅提供有上限的声明式文本标签，不授予代码执行或网络访问能力。
+API v5 增加敏感权限 `files.read` 和 `files.write`。原生系统选择器仅为所选位置创建不透明的临时句柄，
+Worker 不接收绝对路径或 content URI。每次调用检查 Core 实时授权、原生句柄归属、相对路径与 I/O 上限；
+插件停止后撤销句柄。平台限制和非事务行为见[本地文件管理 API](plugin-files-api.md)。
+
+API v2/v3/v4/v5 另支持 `ui.songBadges`，仅提供有上限的声明式文本标签，不授予代码执行或网络访问能力。
 
 旧版 API v1-v2 的裸 `provider` 和 `account` 仍是保留并拒绝的权限。API v3 只允许 manifest v2 Component 明确声明
 `provider.catalog`、`provider.playback`、`provider.recommendation`、`provider.lyrics` 和 `provider.account`。

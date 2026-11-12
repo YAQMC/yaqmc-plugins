@@ -14,6 +14,10 @@ The legacy production host executes `dist/main.js` only. Raw TypeScript is recog
 that a build/package step is required; it is not executed as JavaScript. API v3 music providers are a separate
 WebAssembly Component shape and never execute in the renderer Worker.
 
+Worker API v4 adds host-rendered pages and layout options; API v5 retains those features and adds
+[user-selected local file management](plugin-files-api.md) on desktop and Android. Declare `apiVersion: 5`
+and `files.read` / `files.write` for file operations. A complete page example is in `plugins/script-files`.
+
 ```ts
 import { definePlugin } from '@yaqmc/plugin-sdk';
 

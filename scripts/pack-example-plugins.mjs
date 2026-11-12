@@ -126,6 +126,7 @@ const legacyPluginDirs = [
   'script-actions',
   'script-network',
   'script-pages',
+  'script-files',
   'studio',
   'ink-core',
   'ink-accent',

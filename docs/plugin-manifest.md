@@ -4,7 +4,7 @@
 
 `manifest.json` has two deliberately separate runtime shapes:
 
-- manifest v1 / Plugin API v1, v2 and v4 composes styles, scenes, an isolated script, and (v4) host-rendered
+- manifest v1 / Plugin API v1, v2, v4 and v5 composes styles, scenes, an isolated script, and (v4+) host-rendered
   pages, navigation entries and layout knobs — see the [Plugin Pages API](plugin-pages-api.md);
 - manifest v2 / Plugin API v3 describes one sandboxed Provider Component.
 
@@ -88,7 +88,10 @@ filesystem paths, environment variables, native libraries, HTML, shell, or subpr
 
 ## Declarative song badges
 
-API v2/v3/v4 plugins can contribute plain-text song badges with the `ui.songBadges` permission.
+API v5 retains v4's worker surface and adds `files.read` / `files.write` for user-selected local files.
+It requires a client implementing v5; see [Local files API](plugin-files-api.md). Provider API v3 is unchanged.
+
+API v2/v3/v4/v5 plugins can contribute plain-text song badges with the `ui.songBadges` permission.
 No script entrypoint, Worker, image download, or per-song plugin call is needed. Older hosts that
 do not recognize this permission must be updated before installing such a plugin.
 

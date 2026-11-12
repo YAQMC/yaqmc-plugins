@@ -1,0 +1,14 @@
+{
+  "manifestVersion": 1,
+  "apiVersion": 5,
+  "id": "dev.yaqmc.example.files",
+  "name": "Local files",
+  "version": "1.0.0",
+  "description": "Browse user-selected files on desktop and Android; explicit actions demonstrate file management.",
+  "authors": ["YAQMC examples"],
+  "repository": "https://github.com/YAQMC/yaqmc-plugins",
+  "license": "MIT",
+  "platforms": ["windows", "linux", "macos", "android"],
+  "entrypoints": { "script": "dist/main.js" },
+  "permissions": ["files.read", "files.write", "ui.pages", "ui.navigation"]
+}

@@ -31,7 +31,12 @@ Granted only after review:
 rendered by YAQMC components; plugins never inject markup, styles, images or URLs into those surfaces
 (see the [Plugin Pages API](plugin-pages-api.md)).
 
-API v2/v3/v4 also accept `ui.songBadges` for bounded declarative text badges;
+API v5 adds sensitive `files.read` and `files.write` permissions. Native pickers issue opaque session handles
+for the selected location; workers receive no absolute path or content URI. Live Core authorization, native
+handle ownership checks, relative path validation and I/O bounds apply to each call. Handles are retired on
+plugin shutdown. See [Local files API](plugin-files-api.md) for platform limits and non-transactional behavior.
+
+API v2/v3/v4/v5 also accept `ui.songBadges` for bounded declarative text badges;
 it grants no code execution or network access.
 
 For legacy API v1-v2, bare `provider` and `account` remain reserved and denied. API v3 uses only the explicit

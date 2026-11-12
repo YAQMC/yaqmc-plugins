@@ -4,7 +4,7 @@
 
 `manifest.json` 有两种刻意分离的运行时结构：
 
-- manifest v1 / Plugin API v1、v2 与 v4 可以组合样式、场景、隔离脚本，以及（v4）由宿主渲染的页面、导航入口与布局选项，见[插件页面 API](plugin-pages-api.md)；
+- manifest v1 / Plugin API v1、v2、v4 与 v5 可以组合样式、场景、隔离脚本，以及（v4+）由宿主渲染的页面、导航入口与布局选项，见[插件页面 API](plugin-pages-api.md)；
 - manifest v2 / Plugin API v3 描述一个沙箱化 Provider Component。
 
 同一个包不能混用两种结构。
@@ -83,7 +83,10 @@ world 比权限更宽或权限无法由 world 导入时都会拒绝清单。API 
 
 ## 声明式歌曲标签
 
-API v2/v3/v4 插件可以通过 `ui.songBadges` 权限和清单中的 `songBadges` 提供纯文本标签，无需脚本入口、Worker、图片请求或逐曲调用。尚不认识此权限的旧宿主需要先更新。
+API v5 保留 v4 的 Worker 能力，并增加用户所选本地文件的 `files.read` / `files.write` 权限。
+需要支持 v5 的客户端，详见[本地文件管理 API](plugin-files-api.md)。Provider API v3 不变。
+
+API v2/v3/v4/v5 插件可以通过 `ui.songBadges` 权限和清单中的 `songBadges` 提供纯文本标签，无需脚本入口、Worker、图片请求或逐曲调用。尚不认识此权限的旧宿主需要先更新。
 
 ```json
 {

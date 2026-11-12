@@ -12,6 +12,10 @@
 `dist/main.js`。导入 `.ts` 时 YAQMC 会识别并说明需要先构建/打包，不会把 TypeScript 当作 JavaScript 执行。API v3
 音乐 Provider 是另一种 WebAssembly Component 包形状，不在 renderer Worker 内执行。
 
+Worker API v4 增加宿主渲染的页面与布局选项；API v5 保留这些能力，并增加桌面端和 Android 的
+[用户所选本地文件管理](plugin-files-api.md)。文件操作需要声明 `apiVersion: 5` 及 `files.read` / `files.write`，
+完整页面示例位于 `plugins/script-files`。
+
 ```ts
 import { definePlugin } from '@yaqmc/plugin-sdk';
 

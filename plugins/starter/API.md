@@ -2,28 +2,30 @@
 
 由 YAQMC 的 SDK 与公共文档生成。SDK 与开发文档在插件仓库维护；运行 `npm run api:sync` 更新离线副本并核验客户端接口哈希。
 
-| 接口                                                                    | 权限                                               |
-| ----------------------------------------------------------------------- | -------------------------------------------------- |
-| `ctx.track.get/read`                                                    | `track.read`                                       |
-| `ctx.lyrics.get/read`                                                   | `lyrics.read`                                      |
-| `ctx.player.get/read`                                                   | `player.read`                                      |
-| `ctx.player.play/pause/toggle/next/previous/seek`                       | `player.control`                                   |
-| `ctx.theme.get`                                                         | `theme.read`                                       |
-| `ctx.storage.get/set`, `ctx.settings.get/set`                           | `plugin.storage`                                   |
-| `ctx.ui.lyrics.register/unregister`                                     | `ui.lyrics`（API v4）                              |
-| `ctx.ui.contextMenu.track.register`                                     | `ui.contextMenu`                                   |
-| `ctx.ui.playerBar.register`, `ctx.ui.sidebar.register`, `ctx.ui.notify` | 对应的同名 UI 权限                                 |
-| `ctx.pages.*`, `ctx.navigation.*`, `ctx.layout.*`                       | `ui.pages`、`ui.navigation`、`ui.layout`（API v4） |
-| `ctx.scenes.*`                                                          | `scene.register`                                   |
-| `ctx.network.request`                                                   | `network:https://精确域名`                         |
-| `ctx.events.on`, `ctx.log.info/warn/error`                              | 事件数据按权限过滤；日志不需额外权限               |
+| 接口                                                                    | 权限                                                       |
+| ----------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `ctx.track.get/read`                                                    | `track.read`                                               |
+| `ctx.lyrics.get/read`                                                   | `lyrics.read`                                              |
+| `ctx.player.get/read`                                                   | `player.read`                                              |
+| `ctx.player.play/pause/toggle/next/previous/seek`                       | `player.control`                                           |
+| `ctx.theme.get`                                                         | `theme.read`                                               |
+| `ctx.files.*`                                                           | `files.read` / `files.write`（API v5，用户所选文件或目录） |
+| `ctx.storage.get/set`, `ctx.settings.get/set`                           | `plugin.storage`                                           |
+| `ctx.ui.lyrics.register/unregister`                                     | `ui.lyrics`（API v4）                                      |
+| `ctx.ui.contextMenu.track.register`                                     | `ui.contextMenu`                                           |
+| `ctx.ui.playerBar.register`, `ctx.ui.sidebar.register`, `ctx.ui.notify` | 对应的同名 UI 权限                                         |
+| `ctx.pages.*`, `ctx.navigation.*`, `ctx.layout.*`                       | `ui.pages`、`ui.navigation`、`ui.layout`（API v4）         |
+| `ctx.scenes.*`                                                          | `scene.register`                                           |
+| `ctx.network.request`                                                   | `network:https://精确域名`                                 |
+| `ctx.events.on`, `ctx.log.info/warn/error`                              | 事件数据按权限过滤；日志不需额外权限                       |
 
-API v1/v2/v4 是 Worker 脚本，API v3 是独立的 Wasm Provider Component；两种包形状与权限不能混用。
+API v1/v2/v4/v5 是 Worker 脚本，API v3 是独立的 Wasm Provider Component；两种包形状与权限不能混用。API v5 增加用户授权的本地文件管理。
 脚本使用 `definePlugin({ activate(ctx) { … } })`。`activate` 可返回清理函数；宿主停用时自动清理 UI。
-窗口动作必须声明到歌词按钮上，宿主仅在用户点击时执行。没有原始窗口、DOM、文件、进程或账号凭据接口。
+窗口动作必须声明到歌词按钮上，宿主仅在用户点击时执行。文件管理仅限系统选择器授予的临时句柄；没有原始窗口、DOM、任意文件系统、进程或账号凭据接口。
 
 - [插件开发](api/docs/zh-CN/plugin-development.md)
 - [歌词工具栏](api/docs/zh-CN/plugin-lyrics-api.md)
+- [本地文件管理](api/docs/zh-CN/plugin-files-api.md)
 - [页面、导航与布局](api/docs/zh-CN/plugin-pages-api.md)
 - [清单与版本](api/docs/zh-CN/plugin-manifest.md)
 - [Provider Component](api/docs/zh-CN/provider-component-api.md)
@@ -129,9 +131,12 @@ export type PluginPermission =
   | 'ui.navigation'
   | 'ui.layout'
   | 'ui.lyrics'
+  /** API v5: limited to native user-selected handles. */
+  | 'files.read'
+  | 'files.write'
   | `network:https://${string}`;
 
-/** Reserved capabilities. Raw fetch, filesystem, and account credentials stay denied. */
+/** Reserved capabilities. Raw fetch, unrestricted filesystem, and account credentials stay denied. */
 export type FuturePluginPermission =
   'network' | 'filesystem' | 'provider' | 'account' | 'native' | 'shell';
 
@@ -334,7 +339,64 @@ export interface PluginPageActionEvent {
   pageId: string;
 }
 
+export interface PluginFileSelection {
+  /** Opaque and bound to this plugin runtime. Never persist in storage or settings. */
+  handle: string;
+  name: string;
+  type: 'file' | 'directory';
+  writable: boolean;
+}
+
+export interface PluginFileEntry {
+  name: string;
+  type: 'file' | 'directory';
+  size: number | null;
+  modifiedMs: number | null;
+  writable: boolean;
+}
+
+/** API v5, manifest v1. Read/write limits apply to decoded bytes, not string characters. */
+export interface PluginFiles {
+  capabilities(): Promise<
+    | { available: false }
+    | {
+        available: true;
+        maxBytes: number;
+        maxEntries: number;
+        persistentHandles: false;
+        recursiveDelete: false;
+        directoryDelete: boolean;
+      }
+  >;
+  /** files.read; writable: true also requires files.write. Cancellation returns null. */
+  pickFile(options?: { writable?: boolean }): Promise<PluginFileSelection | null>;
+  pickDirectory(options?: { writable?: boolean }): Promise<PluginFileSelection | null>;
+  stat(handle: string, path?: string): Promise<PluginFileEntry>;
+  list(
+    handle: string,
+    options?: { path?: string; cursor?: number; limit?: number },
+  ): Promise<{ entries: PluginFileEntry[]; nextCursor: number | null }>;
+  /** Up to 512 KiB per call. Prefer base64 when reading binary data or multibyte text in chunks. */
+  readFile(
+    handle: string,
+    options?: { path?: string; encoding?: 'utf8' | 'base64'; offset?: number; length?: number },
+  ): Promise<{ data: string; bytesRead: number; eof: boolean }>;
+  /** Create by default. Existing files require explicit overwrite: true. Writes are at most 512 KiB. */
+  writeFile(
+    handle: string,
+    options: { path?: string; data: string; encoding?: 'utf8' | 'base64'; overwrite?: boolean },
+  ): Promise<{ ok: true; bytesWritten: number }>;
+  mkdir(handle: string, path: string): Promise<{ ok: true }>;
+  /** Rename within the same parent; name must be one portable filename, not a path. */
+  rename(handle: string, path: string, name: string): Promise<{ ok: true; name?: string }>;
+  /** Never recursive. Android supports file deletion only; check directoryDelete before deleting folders. */
+  remove(handle: string, path?: string): Promise<{ ok: true }>;
+  close(handle: string): Promise<{ ok: true }>;
+}
+
 export interface PluginContext {
+  /** API v5. Session-scoped native file handles; no absolute paths or content URIs. */
+  files: PluginFiles;
   plugin: { id: string };
   events: PluginEvents;
   track: { get(): Promise<PluginTrack>; read(): Promise<PluginTrack> };
