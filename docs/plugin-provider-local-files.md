@@ -56,7 +56,8 @@ cover priority, album/artist mapping, search, sorting and optional enrichment; t
 Limits: 200 entries per walk page, 20 per tracks page, 100,000 visited entries per traversal, depth 32, 4,096
 pending directories and 8 open cursors/context. Each page has a work budget and may return fewer entries with a
 continuation. Native I/O is serialized; the broker permits 32 pending requests. Tag parsing reads at most 4 MiB
-per file and caps an individual allocation at 1 MiB. Compressed ID3 frames are rejected before decompression
+per file and sets Lofty's guarded-allocation limit to 1 MiB; this is not a hard limit on all parser allocations
+or total host memory. Compressed ID3 frames are rejected before decompression
 so expansion cannot bypass the native read budget. Large/malformed tags may fail metadata parsing.
 
 Traversal time is O(N) for visited entries; read time/returned memory is O(L) for L bytes. Native offset-based
