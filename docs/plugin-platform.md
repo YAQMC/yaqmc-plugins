@@ -11,6 +11,10 @@ unsigned music-provider plugins as WebAssembly Components hosted by Wasmtime. AP
 host-rendered plugin pages, navigation entries for them, and Home layout knobs ([Plugin Pages API](plugin-pages-api.md)).
 Existing v1, v2 and v3 plugins continue to work unchanged.
 
+Worker API v5 provides selected file management. Provider API v3 separately offers the additive
+[`provider.localFiles` extension](plugin-provider-local-files.md) for read-only local audio, metadata and playback.
+It uses opaque native directory grants, without ambient filesystem or WASI preopens.
+
 Scene scripts may opt into a host-owned background canvas with `ctx.scenes.background.register`. The canvas is
 transferred to the isolated Worker once; artwork and playback state are sent as bounded updates, while the plugin owns
 only its Worker-side drawing loop. See [Plugin Scene API](plugin-scene-api.md#plugin-owned-background-canvas).

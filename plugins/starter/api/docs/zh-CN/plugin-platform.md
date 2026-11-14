@@ -1,5 +1,9 @@
 # 插件平台
 
+Worker API v5 提供用户所选文件管理。Provider API v3 另有增量的
+[`provider.localFiles` 扩展](plugin-provider-local-files.md)，通过不透明的原生目录授权提供只读音频、标签和播放，
+不开放任意文件系统或 WASI 预打开目录。
+
 > **简体中文** | [English](../plugin-platform.md)
 
 YAQMC 运行时插件是由 `ExtensionHost` 加载的用户安装包（`*.yaqmc-plugin`）。它们不是 Electron 扩展，也不会加载

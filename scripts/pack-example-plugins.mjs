@@ -10,7 +10,8 @@ const outDir = path.join(pluginsRoot, 'packages');
 const runtimeDirs = new Set(['styles', 'scenes', 'dist', 'assets', 'component']);
 const providerOnly = process.argv.includes('--provider-example');
 const providerPlatformOnly = process.argv.includes('--provider-platform-example');
-if (providerOnly && providerPlatformOnly) {
+const providerLocalFilesOnly = process.argv.includes('--provider-local-files-example');
+if ([providerOnly, providerPlatformOnly, providerLocalFilesOnly].filter(Boolean).length > 1) {
   throw new Error('choose only one Provider Component example');
 }
 
@@ -131,11 +132,13 @@ const legacyPluginDirs = [
   'ink-core',
   'ink-accent',
 ];
-const pluginDirs = providerOnly
-  ? ['provider-catalog-rust']
-  : providerPlatformOnly
-    ? ['provider-platform-rust']
-    : legacyPluginDirs;
+const pluginDirs = providerLocalFilesOnly
+  ? ['provider-local-files-rust']
+  : providerOnly
+    ? ['provider-catalog-rust']
+    : providerPlatformOnly
+      ? ['provider-platform-rust']
+      : legacyPluginDirs;
 
 await mkdir(outDir, { recursive: true });
 

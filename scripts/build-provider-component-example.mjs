@@ -6,6 +6,17 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const builds = {
+  'local-files-example': {
+    root: path.join(root, 'plugins', 'provider-local-files-rust'),
+    artifact: 'yaqmc_provider_local_files_example.wasm',
+    destination: path.join(
+      root,
+      'plugins',
+      'provider-local-files-rust',
+      'component',
+      'provider.wasm',
+    ),
+  },
   example: {
     root: path.join(root, 'plugins', 'provider-catalog-rust'),
     artifact: 'yaqmc_provider_catalog_example.wasm',

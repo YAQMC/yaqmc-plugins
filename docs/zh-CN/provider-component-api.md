@@ -21,17 +21,21 @@ Component 也只能调用所选 WIT world 实际存在的 import。
 
 ## 能力
 
-| 能力                      | 操作族                                 | Host 行为                                                        |
-| ------------------------- | -------------------------------------- | ---------------------------------------------------------------- |
-| `provider.catalog`        | 搜索、实体、歌手分页、首页、发现、专区 | 校验并重新限定每个实体和 provider 引用。                         |
-| `provider.playback`       | 解析、客户端降级、音质选择             | 只接受不透明受管缓存或精确 origin HTTPS 配方，由 Core 流式消费。 |
-| `provider.recommendation` | 下一批续播                             | 按 provider/账号代次隔离并丢弃过期响应。                         |
-| `provider.lyrics`         | 归一化歌词文档                         | 校验有界逐行/逐字时间，失败时独立降级。                          |
-| `provider.comments`       | 只读歌曲评论及回复                     | 宿主统一渲染评论面板和歌词弹幕，校验有界分页。                   |
-| `provider.account`        | 登录、快照、账号库、收藏和歌单变更     | 把状态、取消、存储和凭据句柄绑定到单个 provider 实例。           |
+| 能力                      | 操作族                                 | Host 行为                                                                   |
+| ------------------------- | -------------------------------------- | --------------------------------------------------------------------------- |
+| `provider.catalog`        | 搜索、实体、歌手分页、首页、发现、专区 | 校验并重新限定每个实体和 provider 引用。                                    |
+| `provider.playback`       | 解析、客户端降级、音质选择             | 接受受管缓存、精确 origin HTTPS 或另行授权的本地音频 recipe，由 Core 消费。 |
+| `provider.recommendation` | 下一批续播                             | 按 provider/账号代次隔离并丢弃过期响应。                                    |
+| `provider.lyrics`         | 归一化歌词文档                         | 校验有界逐行/逐字时间，失败时独立降级。                                     |
+| `provider.comments`       | 只读歌曲评论及回复                     | 宿主统一渲染评论面板和歌词弹幕，校验有界分页。                              |
+| `provider.account`        | 登录、快照、账号库、收藏和歌单变更     | 把状态、取消、存储和凭据句柄绑定到单个 provider 实例。                      |
 
 JSON fixture 是完整操作名列表。实现可以对可选账号变更返回清洗后的 `unsupported-operation`，但不能虚构未声明能力，
 也不能把操作放到另一个 capability 下调用。
+
+`provider.localFiles` 是新增的敏感 **Host import 能力**，不是 `invoke` 操作族。
+四个 `provider-local-files*` world 提供原生目录授权、有界遍历、宿主标签解析及只读本地播放，
+完整契约见[Provider 本地音频](plugin-provider-local-files.md)。
 
 冻结操作：
 

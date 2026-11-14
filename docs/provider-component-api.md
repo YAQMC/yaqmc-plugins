@@ -22,18 +22,22 @@ and a Component can call only the imports present in its selected WIT world.
 
 ## Capabilities
 
-| Capability                | Operation family                                        | Host behavior                                                                        |
-| ------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------ |
-| `provider.catalog`        | search, entities, artist pages, Home, Discover, areas   | Validates and re-scopes every entity and provider reference.                         |
-| `provider.playback`       | resolve, client fallback, quality selection             | Accepts only an opaque managed-cache or exact-origin HTTPS recipe; Core streams it.  |
-| `provider.recommendation` | next continuation batch                                 | Fences results by provider/account generation and discards stale responses.          |
-| `provider.lyrics`         | normalized lyric document                               | Validates bounded line/word timing and degrades independently.                       |
-| `provider.comments`       | read-only song comments and replies                     | Renders a shared comment drawer and lyrics overlay; validates bounded pages.         |
-| `provider.account`        | login, snapshot, library, favorites, playlist mutations | Binds state, cancellation, storage, and credential handles to one provider instance. |
+| Capability                | Operation family                                        | Host behavior                                                                                            |
+| ------------------------- | ------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `provider.catalog`        | search, entities, artist pages, Home, Discover, areas   | Validates and re-scopes every entity and provider reference.                                             |
+| `provider.playback`       | resolve, client fallback, quality selection             | Accepts managed-cache, exact-origin HTTPS, or separately granted local audio recipes; Core streams them. |
+| `provider.recommendation` | next continuation batch                                 | Fences results by provider/account generation and discards stale responses.                              |
+| `provider.lyrics`         | normalized lyric document                               | Validates bounded line/word timing and degrades independently.                                           |
+| `provider.comments`       | read-only song comments and replies                     | Renders a shared comment drawer and lyrics overlay; validates bounded pages.                             |
+| `provider.account`        | login, snapshot, library, favorites, playlist mutations | Binds state, cancellation, storage, and credential handles to one provider instance.                     |
 
 The JSON fixture is the complete list of operation names. An implementation may return a sanitized
 `unsupported-operation` error for optional account mutations, but it may not invent an undeclared capability or call
 an operation under a different capability.
+
+`provider.localFiles` is an additional sensitive **Host import capability**, not an `invoke` operation family.
+Four `provider-local-files*` worlds provide native directory authorization, bounded traversal, host tag parsing
+and read-only local playback. See [Provider local audio](plugin-provider-local-files.md) for the complete contract.
 
 Frozen operations:
 

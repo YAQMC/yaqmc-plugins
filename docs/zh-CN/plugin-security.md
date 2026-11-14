@@ -25,6 +25,10 @@ API v5 增加敏感权限 `files.read` 和 `files.write`。原生系统选择器
 Worker 不接收绝对路径或 content URI。每次调用检查 Core 实时授权、原生句柄归属、相对路径与 I/O 上限；
 插件停止后撤销句柄。平台限制和非事务行为见[本地文件管理 API](plugin-files-api.md)。
 
+Provider Component 可在显式 `provider-local-files*` world 中单独请求敏感能力 `provider.localFiles`，
+仅只读访问经原生选择器授权的音频/封面并提供不透明播放，不授予 WASI 文件系统或写入能力。
+原生续传接口限 Host 调用，不转发给 renderer。限制、撤销与缓存行为见[Provider 本地音频](plugin-provider-local-files.md)。
+
 API v2/v3/v4/v5 另支持 `ui.songBadges`，仅提供有上限的声明式文本标签，不授予代码执行或网络访问能力。
 
 旧版 API v1-v2 的裸 `provider` 和 `account` 仍是保留并拒绝的权限。API v3 只允许 manifest v2 Component 明确声明

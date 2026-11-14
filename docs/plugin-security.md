@@ -36,6 +36,11 @@ for the selected location; workers receive no absolute path or content URI. Live
 handle ownership checks, relative path validation and I/O bounds apply to each call. Handles are retired on
 plugin shutdown. See [Local files API](plugin-files-api.md) for platform limits and non-transactional behavior.
 
+Provider Components can separately request sensitive `provider.localFiles` in an explicit `provider-local-files*`
+world. It grants only native user-selected audio/artwork reads and opaque playback; no WASI filesystem or write
+operations. Native continuations are Host-only and never forwarded to renderer surfaces. See
+[Provider local audio](plugin-provider-local-files.md) for limits, revocation and cache behavior.
+
 API v2/v3/v4/v5 also accept `ui.songBadges` for bounded declarative text badges;
 it grants no code execution or network access.
 

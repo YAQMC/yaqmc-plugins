@@ -24,7 +24,11 @@ export interface PluginProviderManifest {
     | 'provider-storage'
     | 'provider-network'
     | 'provider-network-storage'
-    | 'provider-account';
+    | 'provider-account'
+    | 'provider-local-files'
+    | 'provider-local-files-storage'
+    | 'provider-local-files-network'
+    | 'provider-local-files-network-storage';
   capabilities: Array<
     | 'provider.catalog'
     | 'provider.playback'
@@ -32,6 +36,7 @@ export interface PluginProviderManifest {
     | 'provider.lyrics'
     | 'provider.comments'
     | 'provider.account'
+    | 'provider.localFiles'
   >;
   platform?: string;
   /** Defaults to 1. Increment when saved sessions cannot be reused safely. */
@@ -339,7 +344,7 @@ export interface PluginFiles {
   list(
     handle: string,
     options?: { path?: string; cursor?: number; limit?: number },
-  ): Promise<{ entries: PluginFileEntry[]; nextCursor: number | null }>;
+  ): Promise<{ entries: PluginFileEntry[]; nextCursor: number | null; scanned?: number }>;
   /** Up to 512 KiB per call. Prefer base64 when reading binary data or multibyte text in chunks. */
   readFile(
     handle: string,

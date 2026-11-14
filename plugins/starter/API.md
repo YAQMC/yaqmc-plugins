@@ -26,6 +26,7 @@ API v1/v2/v4/v5 是 Worker 脚本，API v3 是独立的 Wasm Provider Component�
 - [插件开发](api/docs/zh-CN/plugin-development.md)
 - [歌词工具栏](api/docs/zh-CN/plugin-lyrics-api.md)
 - [本地文件管理](api/docs/zh-CN/plugin-files-api.md)
+- [Provider 本地音频](api/docs/zh-CN/plugin-provider-local-files.md)
 - [页面、导航与布局](api/docs/zh-CN/plugin-pages-api.md)
 - [清单与版本](api/docs/zh-CN/plugin-manifest.md)
 - [Provider Component](api/docs/zh-CN/provider-component-api.md)
@@ -60,7 +61,11 @@ export interface PluginProviderManifest {
     | 'provider-storage'
     | 'provider-network'
     | 'provider-network-storage'
-    | 'provider-account';
+    | 'provider-account'
+    | 'provider-local-files'
+    | 'provider-local-files-storage'
+    | 'provider-local-files-network'
+    | 'provider-local-files-network-storage';
   capabilities: Array<
     | 'provider.catalog'
     | 'provider.playback'
@@ -68,6 +73,7 @@ export interface PluginProviderManifest {
     | 'provider.lyrics'
     | 'provider.comments'
     | 'provider.account'
+    | 'provider.localFiles'
   >;
   platform?: string;
   /** Defaults to 1. Increment when saved sessions cannot be reused safely. */
@@ -375,7 +381,7 @@ export interface PluginFiles {
   list(
     handle: string,
     options?: { path?: string; cursor?: number; limit?: number },
-  ): Promise<{ entries: PluginFileEntry[]; nextCursor: number | null }>;
+  ): Promise<{ entries: PluginFileEntry[]; nextCursor: number | null; scanned?: number }>;
   /** Up to 512 KiB per call. Prefer base64 when reading binary data or multibyte text in chunks. */
   readFile(
     handle: string,

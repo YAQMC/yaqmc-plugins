@@ -19,6 +19,12 @@ const plugins = [
 ];
 const providerPlugins = [
   {
+    directory: 'provider-local-files-rust',
+    world: 'provider-local-files-storage',
+    capabilities: ['provider.catalog', 'provider.playback', 'provider.localFiles'],
+    permissions: ['provider.catalog', 'provider.playback', 'provider.localFiles', 'plugin.storage'],
+  },
+  {
     directory: 'provider-catalog-rust',
     world: 'provider',
     capabilities: ['provider.catalog'],

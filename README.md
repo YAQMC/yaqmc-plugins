@@ -7,6 +7,7 @@ YAQMC 官方维护的独立插件示例仓库。插件需要在客户端设置�
 - [全部插件源码](plugins/) · [可直接导入的插件包](plugins/packages/)
 - [客户端](https://github.com/YAQMC/YAQMC) · [网站](https://yaqmc.github.io/)
 - [本地文件管理 API v5](docs/zh-CN/plugin-files-api.md) · [文件管理示例](plugins/script-files/)
+- [Provider 本地音频接口](docs/zh-CN/plugin-provider-local-files.md) · [可复制本地音乐 Provider](plugins/provider-local-files-rust/)
 
 复制 `plugins/starter`，修改插件 ID、名称和 `main.js`，然后使用 Node.js 26.7 或更新版本执行 `node pack.mjs`，从 `dist/` 取得 `.yaqmc-plugin`。
 
@@ -19,6 +20,7 @@ npm test
 # 安装 Rust 1.88+ 和 wasm32-wasip2 target 后：
 npm run provider:catalog
 npm run provider:platform
+npm run provider:local-files
 ```
 
 本仓库维护 [SDK 类型](sdk/plugin/src/index.ts)、[开发文档](docs/plugin-development.md)与[中文文档](docs/zh-CN/plugin-development.md)。客户端仅保留插件宿主实现和运行时 WIT 协议。本仓库每 15 分钟检查客户端 `main`，更新 WIT 副本、接口哈希和模板离线文档；GitHub 定时任务可能延迟，也可手动触发。工作流仅使用本仓库的 `GITHUB_TOKEN`。`UPSTREAM.json` 记录对应客户端提交，`plugins/starter/api/contract.json` 分别记录客户端实现和本仓库 SDK/文档的哈希。修改 API 时，应同时维护本仓库的 SDK 与开发文档；离线副本由工具生成，不手工修改。

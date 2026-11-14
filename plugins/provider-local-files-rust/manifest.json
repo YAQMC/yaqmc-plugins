@@ -1,0 +1,19 @@
+{
+  "manifestVersion": 2,
+  "apiVersion": 3,
+  "id": "dev.yaqmc.example.local-files",
+  "name": "Local audio example",
+  "version": "1.0.0",
+  "description": "Read-only local audio Provider. Search :add-folder to choose a folder, :scan to index the next batch, then search titles.",
+  "license": "GPL-3.0-or-later",
+  "platforms": ["windows", "linux", "macos", "android"],
+  "entrypoints": { "component": "component/provider.wasm" },
+  "provider": {
+    "id": "dev.yaqmc.example.local-files",
+    "name": "Local audio example",
+    "witVersion": "0.1.0",
+    "world": "provider-local-files-storage",
+    "capabilities": ["provider.catalog", "provider.playback", "provider.localFiles"]
+  },
+  "permissions": ["provider.catalog", "provider.playback", "provider.localFiles", "plugin.storage"]
+}

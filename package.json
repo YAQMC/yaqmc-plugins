@@ -15,6 +15,7 @@
     "pack": "npm run build && npm run validate && node scripts/pack-example-plugins.mjs && node scripts/pack-starter.mjs",
     "provider:catalog": "node scripts/build-provider-component-example.mjs example && node scripts/pack-example-plugins.mjs --provider-example",
     "provider:platform": "node scripts/build-provider-component-example.mjs platform-example && node scripts/pack-example-plugins.mjs --provider-platform-example",
+    "provider:local-files": "node scripts/build-provider-component-example.mjs local-files-example && node scripts/pack-example-plugins.mjs --provider-local-files-example",
     "test": "node --test tests/*.test.mjs"
   },
   "devDependencies": {

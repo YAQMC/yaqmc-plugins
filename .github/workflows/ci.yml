@@ -32,3 +32,4 @@ jobs:
           targets: wasm32-wasip2
       - run: npm run provider:catalog
       - run: npm run provider:platform
+      - run: npm run provider:local-files

@@ -3,7 +3,7 @@
 > **English** | [简体中文](zh-CN/plugin-files-api.md)
 
 Plugin API **v5** adds `ctx.files` to manifest v1 worker plugins. API v1/v2/v4 plugins keep their existing behavior;
-API v3 Provider Components and their WIT worlds are unchanged. Older clients retain v5 packages as incompatible
+Provider Components use a separate [read-only local audio extension](plugin-provider-local-files.md), not `ctx.files`. Older clients retain v5 packages as incompatible
 instead of activating a script with missing capabilities. Use a client build that implements API v5.
 
 Declare `files.read` to choose and read files, or both `files.read` and `files.write` to request a writable selection.
@@ -49,6 +49,8 @@ from `activate()`. [The file-manager example](../plugins/script-files/) provides
 multibyte text read in chunks, use base64 and decode with a streaming decoder so a character split between calls
 is not replaced. Writes replace the complete file; append, streaming writes and copy/move are not implemented.
 List cursors are numeric offsets in native enumeration order, not stable snapshots; refresh when contents change.
+Native pages examine at most 1,000 physical entries and may be empty while `nextCursor` is non-null. Follow that
+cursor to continue; optional `scanned` reports examined entries, including rejected names/types.
 
 An empty path addresses the selected entry. A selected file cannot access siblings. Directory paths are relative
 and use `/`; absolute paths, `..`, `.`, empty components, backslashes, NUL/control characters, Windows device
