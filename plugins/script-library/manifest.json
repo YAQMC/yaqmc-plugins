@@ -1,0 +1,21 @@
+{
+  "manifestVersion": 1,
+  "apiVersion": 6,
+  "id": "dev.yaqmc.example.library",
+  "name": "Local playlist tools",
+  "version": "1.0.0",
+  "description": "Plugin-owned playlists with explicit JSON import/export and a configurable application shortcut.",
+  "license": "MIT",
+  "platforms": ["windows", "macos", "linux", "android"],
+  "entrypoints": { "script": "dist/main.js" },
+  "permissions": [
+    "playlists.read",
+    "playlists.write",
+    "shortcuts.register",
+    "files.read",
+    "files.write",
+    "ui.pages",
+    "ui.navigation",
+    "ui.notify"
+  ]
+}

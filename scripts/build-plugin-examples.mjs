@@ -8,6 +8,11 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const plugins = [
   {
+    id: 'script-library',
+    source: 'plugins/script-library/src/main.ts',
+    out: 'plugins/script-library/dist/main.js',
+  },
+  {
     id: 'script-files',
     source: 'plugins/script-files/src/main.ts',
     out: 'plugins/script-files/dist/main.js',

@@ -103,6 +103,10 @@ export type PluginPermission =
   /** API v5: limited to native user-selected handles. */
   | 'files.read'
   | 'files.write'
+  /** API v6: plugin-owned commands and local playlists. */
+  | 'shortcuts.register'
+  | 'playlists.read'
+  | 'playlists.write'
   | `network:https://${string}`;
 
 /** Reserved capabilities. Raw fetch, unrestricted filesystem, and account credentials stay denied. */
@@ -151,7 +155,8 @@ export type PluginEventName =
   | 'theme.changed'
   | 'scene.changed'
   | 'settings.changed'
-  | 'ui.action';
+  | 'ui.action'
+  | 'shortcut.triggered';
 
 export interface PluginTrack {
   id: string | null;
@@ -363,7 +368,53 @@ export interface PluginFiles {
   close(handle: string): Promise<{ ok: true }>;
 }
 
+export interface PluginPlaylistTrack {
+  providerId: string;
+  trackId: string;
+  title: string;
+  artists?: string[];
+  album?: string;
+  durationMs?: number;
+}
+export interface PluginPlaylistInput {
+  name: string;
+  description?: string;
+  tracks?: PluginPlaylistTrack[];
+}
+export interface PluginPlaylist extends PluginPlaylistInput {
+  id: string;
+  description: string;
+  tracks: PluginPlaylistTrack[];
+}
+export interface PluginPlaylistDocument {
+  format: 'yaqmc.playlist';
+  version: 1;
+  playlist: PluginPlaylistInput;
+}
+
 export interface PluginContext {
+  /** API v6. Application focus only; never a raw keyboard/global keylogging stream. */
+  shortcuts: {
+    register(command: {
+      id: string;
+      label: string;
+      accelerator: string | null;
+    }): Promise<{ ok: true }>;
+    unregister(id: string): Promise<{ ok: true }>;
+    list(): Promise<Array<{ id: string; label: string; accelerator: string | null }>>;
+    set(id: string, accelerator: string | null): Promise<{ ok: true }>;
+    onTriggered(id: string, handler: (event: { id: string }) => void): () => void;
+  };
+  /** API v6. Persisted per plugin, without platform account mutations. */
+  playlists: {
+    list(): Promise<Array<{ id: string; name: string; description: string; trackCount: number }>>;
+    get(id: string): Promise<PluginPlaylist>;
+    create(playlist: PluginPlaylistInput): Promise<PluginPlaylist>;
+    update(id: string, patch: Partial<PluginPlaylistInput>): Promise<PluginPlaylist>;
+    remove(id: string): Promise<{ ok: true }>;
+    import(document: PluginPlaylistDocument): Promise<PluginPlaylist>;
+    export(id: string): Promise<PluginPlaylistDocument>;
+  };
   /** API v5. Session-scoped native file handles; no absolute paths or content URIs. */
   files: PluginFiles;
   plugin: { id: string };
@@ -379,6 +430,9 @@ export interface PluginContext {
     next(): Promise<{ ok: true }>;
     previous(): Promise<{ ok: true }>;
     seek(positionMs: number): Promise<{ ok: true; positionMs: number }>;
+    /** API v6; player.control, volume in [0,1]. */
+    setVolume(volume: number): Promise<{ ok: true }>;
+    toggleMuted(): Promise<{ ok: true }>;
   };
   theme: { get(): Promise<{ source: string; colorMode?: string }> };
   storage: PluginStorage;

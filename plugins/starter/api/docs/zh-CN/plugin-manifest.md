@@ -84,6 +84,8 @@ world 比权限更宽或权限无法由 world 导入时都会拒绝清单。API 
 ## 声明式歌曲标签
 
 API v5 保留 v4 的 Worker 能力，并增加用户所选本地文件的 `files.read` / `files.write` 权限。
+
+API v6 继承 v5，增加 `shortcuts.register`、`playlists.read`、`playlists.write`。使用 manifest v1 / API v6，详见[快捷键与插件本地歌单](plugin-shortcuts-playlists.md)。
 需要支持 v5 的客户端，详见[本地文件管理 API](plugin-files-api.md)。Provider API v3 不变。
 
 API v2/v3/v4/v5 插件可以通过 `ui.songBadges` 权限和清单中的 `songBadges` 提供纯文本标签，无需脚本入口、Worker、图片请求或逐曲调用。尚不认识此权限的旧宿主需要先更新。

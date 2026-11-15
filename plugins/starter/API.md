@@ -2,30 +2,33 @@
 
 由 YAQMC 的 SDK 与公共文档生成。SDK 与开发文档在插件仓库维护；运行 `npm run api:sync` 更新离线副本并核验客户端接口哈希。
 
-| 接口                                                                    | 权限                                                       |
-| ----------------------------------------------------------------------- | ---------------------------------------------------------- |
-| `ctx.track.get/read`                                                    | `track.read`                                               |
-| `ctx.lyrics.get/read`                                                   | `lyrics.read`                                              |
-| `ctx.player.get/read`                                                   | `player.read`                                              |
-| `ctx.player.play/pause/toggle/next/previous/seek`                       | `player.control`                                           |
-| `ctx.theme.get`                                                         | `theme.read`                                               |
-| `ctx.files.*`                                                           | `files.read` / `files.write`（API v5，用户所选文件或目录） |
-| `ctx.storage.get/set`, `ctx.settings.get/set`                           | `plugin.storage`                                           |
-| `ctx.ui.lyrics.register/unregister`                                     | `ui.lyrics`（API v4）                                      |
-| `ctx.ui.contextMenu.track.register`                                     | `ui.contextMenu`                                           |
-| `ctx.ui.playerBar.register`, `ctx.ui.sidebar.register`, `ctx.ui.notify` | 对应的同名 UI 权限                                         |
-| `ctx.pages.*`, `ctx.navigation.*`, `ctx.layout.*`                       | `ui.pages`、`ui.navigation`、`ui.layout`（API v4）         |
-| `ctx.scenes.*`                                                          | `scene.register`                                           |
-| `ctx.network.request`                                                   | `network:https://精确域名`                                 |
-| `ctx.events.on`, `ctx.log.info/warn/error`                              | 事件数据按权限过滤；日志不需额外权限                       |
+| 接口                                                                    | 权限                                                               |
+| ----------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| `ctx.track.get/read`                                                    | `track.read`                                                       |
+| `ctx.lyrics.get/read`                                                   | `lyrics.read`                                                      |
+| `ctx.player.get/read`                                                   | `player.read`                                                      |
+| `ctx.player.play/pause/toggle/next/previous/seek`                       | `player.control`                                                   |
+| `ctx.theme.get`                                                         | `theme.read`                                                       |
+| `ctx.files.*`                                                           | `files.read` / `files.write`（API v5，用户所选文件或目录）         |
+| `ctx.shortcuts.*`                                                       | `shortcuts.register`（API v6，仅应用内的插件自有动作）             |
+| `ctx.playlists.*`                                                       | `playlists.read` / `playlists.write`（API v6，插件自己的本地歌单） |
+| `ctx.storage.get/set`, `ctx.settings.get/set`                           | `plugin.storage`                                                   |
+| `ctx.ui.lyrics.register/unregister`                                     | `ui.lyrics`（API v4）                                              |
+| `ctx.ui.contextMenu.track.register`                                     | `ui.contextMenu`                                                   |
+| `ctx.ui.playerBar.register`, `ctx.ui.sidebar.register`, `ctx.ui.notify` | 对应的同名 UI 权限                                                 |
+| `ctx.pages.*`, `ctx.navigation.*`, `ctx.layout.*`                       | `ui.pages`、`ui.navigation`、`ui.layout`（API v4）                 |
+| `ctx.scenes.*`                                                          | `scene.register`                                                   |
+| `ctx.network.request`                                                   | `network:https://精确域名`                                         |
+| `ctx.events.on`, `ctx.log.info/warn/error`                              | 事件数据按权限过滤；日志不需额外权限                               |
 
-API v1/v2/v4/v5 是 Worker 脚本，API v3 是独立的 Wasm Provider Component；两种包形状与权限不能混用。API v5 增加用户授权的本地文件管理。
+API v1/v2/v4/v5/v6 是 Worker 脚本，API v3 是独立的 Wasm Provider Component；两种包形状与权限不能混用。API v6 增加可自定义的快捷键和插件本地歌单。
 脚本使用 `definePlugin({ activate(ctx) { … } })`。`activate` 可返回清理函数；宿主停用时自动清理 UI。
 窗口动作必须声明到歌词按钮上，宿主仅在用户点击时执行。文件管理仅限系统选择器授予的临时句柄；没有原始窗口、DOM、任意文件系统、进程或账号凭据接口。
 
 - [插件开发](api/docs/zh-CN/plugin-development.md)
 - [歌词工具栏](api/docs/zh-CN/plugin-lyrics-api.md)
 - [本地文件管理](api/docs/zh-CN/plugin-files-api.md)
+- [快捷键与本地歌单](api/docs/zh-CN/plugin-shortcuts-playlists.md)
 - [Provider 本地音频](api/docs/zh-CN/plugin-provider-local-files.md)
 - [页面、导航与布局](api/docs/zh-CN/plugin-pages-api.md)
 - [清单与版本](api/docs/zh-CN/plugin-manifest.md)
@@ -140,6 +143,10 @@ export type PluginPermission =
   /** API v5: limited to native user-selected handles. */
   | 'files.read'
   | 'files.write'
+  /** API v6: plugin-owned commands and local playlists. */
+  | 'shortcuts.register'
+  | 'playlists.read'
+  | 'playlists.write'
   | `network:https://${string}`;
 
 /** Reserved capabilities. Raw fetch, unrestricted filesystem, and account credentials stay denied. */
@@ -188,7 +195,8 @@ export type PluginEventName =
   | 'theme.changed'
   | 'scene.changed'
   | 'settings.changed'
-  | 'ui.action';
+  | 'ui.action'
+  | 'shortcut.triggered';
 
 export interface PluginTrack {
   id: string | null;
@@ -400,7 +408,53 @@ export interface PluginFiles {
   close(handle: string): Promise<{ ok: true }>;
 }
 
+export interface PluginPlaylistTrack {
+  providerId: string;
+  trackId: string;
+  title: string;
+  artists?: string[];
+  album?: string;
+  durationMs?: number;
+}
+export interface PluginPlaylistInput {
+  name: string;
+  description?: string;
+  tracks?: PluginPlaylistTrack[];
+}
+export interface PluginPlaylist extends PluginPlaylistInput {
+  id: string;
+  description: string;
+  tracks: PluginPlaylistTrack[];
+}
+export interface PluginPlaylistDocument {
+  format: 'yaqmc.playlist';
+  version: 1;
+  playlist: PluginPlaylistInput;
+}
+
 export interface PluginContext {
+  /** API v6. Application focus only; never a raw keyboard/global keylogging stream. */
+  shortcuts: {
+    register(command: {
+      id: string;
+      label: string;
+      accelerator: string | null;
+    }): Promise<{ ok: true }>;
+    unregister(id: string): Promise<{ ok: true }>;
+    list(): Promise<Array<{ id: string; label: string; accelerator: string | null }>>;
+    set(id: string, accelerator: string | null): Promise<{ ok: true }>;
+    onTriggered(id: string, handler: (event: { id: string }) => void): () => void;
+  };
+  /** API v6. Persisted per plugin, without platform account mutations. */
+  playlists: {
+    list(): Promise<Array<{ id: string; name: string; description: string; trackCount: number }>>;
+    get(id: string): Promise<PluginPlaylist>;
+    create(playlist: PluginPlaylistInput): Promise<PluginPlaylist>;
+    update(id: string, patch: Partial<PluginPlaylistInput>): Promise<PluginPlaylist>;
+    remove(id: string): Promise<{ ok: true }>;
+    import(document: PluginPlaylistDocument): Promise<PluginPlaylist>;
+    export(id: string): Promise<PluginPlaylistDocument>;
+  };
   /** API v5. Session-scoped native file handles; no absolute paths or content URIs. */
   files: PluginFiles;
   plugin: { id: string };
@@ -416,6 +470,9 @@ export interface PluginContext {
     next(): Promise<{ ok: true }>;
     previous(): Promise<{ ok: true }>;
     seek(positionMs: number): Promise<{ ok: true; positionMs: number }>;
+    /** API v6; player.control, volume in [0,1]. */
+    setVolume(volume: number): Promise<{ ok: true }>;
+    toggleMuted(): Promise<{ ok: true }>;
   };
   theme: { get(): Promise<{ source: string; colorMode?: string }> };
   storage: PluginStorage;

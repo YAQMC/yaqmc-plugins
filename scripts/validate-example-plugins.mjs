@@ -13,6 +13,7 @@ const plugins = [
   'script-network',
   'script-pages',
   'script-files',
+  'script-library',
   'studio',
   'ink-core',
   'ink-accent',
@@ -60,8 +61,8 @@ for (const directory of plugins) {
     process.stderr.write(`${directory}: manifestVersion must stay 1\n`);
     failed = true;
   }
-  if (![1, 2, 4, 5].includes(manifest.apiVersion)) {
-    process.stderr.write(`${directory}: apiVersion must be 1, 2, 4, or 5\n`);
+  if (![1, 2, 4, 5, 6].includes(manifest.apiVersion)) {
+    process.stderr.write(`${directory}: apiVersion must be 1, 2, 4, 5, or 6\n`);
     failed = true;
   }
   if (manifest.permissions?.includes('network') || manifest.permissions?.includes('network:*')) {

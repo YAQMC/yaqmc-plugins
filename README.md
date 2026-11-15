@@ -7,6 +7,7 @@ YAQMC 官方维护的独立插件示例仓库。插件需要在客户端设置�
 - [全部插件源码](plugins/) · [可直接导入的插件包](plugins/packages/)
 - [客户端](https://github.com/YAQMC/YAQMC) · [网站](https://yaqmc.github.io/)
 - [本地文件管理 API v5](docs/zh-CN/plugin-files-api.md) · [文件管理示例](plugins/script-files/)
+- [快捷键与本地歌单 API v6](docs/zh-CN/plugin-shortcuts-playlists.md) · [导入导出示例](plugins/script-library/)
 - [Provider 本地音频接口](docs/zh-CN/plugin-provider-local-files.md) · [可复制本地音乐 Provider](plugins/provider-local-files-rust/)
 
 复制 `plugins/starter`，修改插件 ID、名称和 `main.js`，然后使用 Node.js 26.7 或更新版本执行 `node pack.mjs`，从 `dist/` 取得 `.yaqmc-plugin`。

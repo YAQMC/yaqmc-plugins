@@ -91,6 +91,9 @@ filesystem paths, environment variables, native libraries, HTML, shell, or subpr
 API v5 retains v4's worker surface and adds `files.read` / `files.write` for user-selected local files.
 It requires a client implementing v5; see [Local files API](plugin-files-api.md). Provider API v3 is unchanged.
 
+API v6 inherits v5 and adds `shortcuts.register`, `playlists.read` and `playlists.write`.
+Use manifest v1 / API v6 for [shortcuts and plugin-owned playlists](plugin-shortcuts-playlists.md).
+
 API v2/v3/v4/v5 plugins can contribute plain-text song badges with the `ui.songBadges` permission.
 No script entrypoint, Worker, image download, or per-song plugin call is needed. Older hosts that
 do not recognize this permission must be updated before installing such a plugin.

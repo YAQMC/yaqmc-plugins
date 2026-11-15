@@ -15,6 +15,9 @@ Worker API v5 provides selected file management. Provider API v3 separately offe
 [`provider.localFiles` extension](plugin-provider-local-files.md) for read-only local audio, metadata and playback.
 It uses opaque native directory grants, without ambient filesystem or WASI preopens.
 
+Worker API v6 adds [plugin shortcuts and local playlists](plugin-shortcuts-playlists.md), including user-editable
+command bindings and playlist JSON import/export. It inherits v5 and does not add platform-account writes.
+
 Scene scripts may opt into a host-owned background canvas with `ctx.scenes.background.register`. The canvas is
 transferred to the isolated Worker once; artwork and playback state are sent as bounded updates, while the plugin owns
 only its Worker-side drawing loop. See [Plugin Scene API](plugin-scene-api.md#plugin-owned-background-canvas).
