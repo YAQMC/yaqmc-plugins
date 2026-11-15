@@ -74,6 +74,13 @@ scan does not prove safety. A high CSS remote-url finding blocks style activatio
 
 ## Safe Mode
 
-A journal records plugin activation vs clean exit. Unclean shutdown during activation enables Safe Mode: third-party
-styles, scenes, and scripts stay off; built-in lyrics presets remain; packages and settings are kept. Suspect plugins
-are marked Failed so they are not reactivated in a crash loop.
+The activation journal tracks only pending Worker or Wasm Provider startup. A completed activation clears its marker;
+later process termination, including Android process reclamation, does not automatically enable global Safe Mode or
+disable every plugin. After the same package content fails to complete activation on three consecutive interrupted
+attempts, only that plugin is suspended. Its enabled preference, package and settings are retained; choose **Enable**
+to retry. Successful activation resets the interruption count. Explicit runtime errors still mark the affected plugin Failed.
+
+Manual Safe Mode pauses third-party plugins and retains their saved enable preferences. Leaving it restores eligible
+plugins. A one-time migration restores enable preferences overwritten by the legacy unclean-shutdown recovery reason;
+manual disables and other failures are preserved. Existing global Safe Mode remains in place because older records
+cannot distinguish a manual choice from automatic recovery; leave it explicitly when ready to resume plugins.

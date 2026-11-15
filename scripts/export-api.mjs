@@ -78,6 +78,8 @@ const contracts = [
   'src/application/plugin-shortcuts.ts',
   'packages/yaqmc-client/src/shortcuts.ts',
   'crates/yaqmc-core/src/plugin/host/playlists.rs',
+  'crates/yaqmc-core/src/plugin/host.rs',
+  'crates/yaqmc-core/src/plugin/host/activation.rs',
   'src/application/plugin-pages.ts',
   'src/application/plugin-ui.ts',
   'src/application/plugin-song-badges.ts',

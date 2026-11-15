@@ -7,7 +7,8 @@ type Bookmark = {
 };
 
 function asTrack(value: unknown): PluginTrack {
-  const source = value && typeof value === 'object' ? (value as PluginTrack) : {};
+  const source: Partial<PluginTrack> =
+    value && typeof value === 'object' ? (value as Partial<PluginTrack>) : {};
   return {
     id: source.id ?? null,
     title: source.title ?? null,
