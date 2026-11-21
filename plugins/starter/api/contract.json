@@ -7,7 +7,7 @@
     "client:src/application/plugin-shortcuts.ts": "04db15c3ad86a0957b1430967e2c50e9b5a4a0cb772875dc5ffd733cb7d8e88d",
     "client:packages/yaqmc-client/src/shortcuts.ts": "633b10d4f89b38c8438f34d5e8dc8ad55cd93a41a0fc3c3605433bf13ab0528f",
     "client:crates/yaqmc-core/src/plugin/host/playlists.rs": "31966516929b498df4c3e6595e965695698f90513650a5b4a0af465539d4b12e",
-    "client:crates/yaqmc-core/src/plugin/host.rs": "972ee4591a81e9eacce22892b7cf666d587f4e6d7ed196649b81f6f8c1dba708",
+    "client:crates/yaqmc-core/src/plugin/host.rs": "04292263cf3ee884952aab6d574cbf8a91ac8760629942e9926a495370cc3d99",
     "client:crates/yaqmc-core/src/plugin/host/activation.rs": "8ea6cf06de807fb6960c12707f225531aa011e291c74451630287c92f4a1bb53",
     "client:src/application/plugin-pages.ts": "0a4868754a61cb4d6381e91ce49eae8b7f5608a6d0cb51cbdc71c348ecfe9952",
     "client:src/application/plugin-ui.ts": "f9f59592e6404d0b0143fceee425327267825c612de84df22a9e612b7f62f327",
